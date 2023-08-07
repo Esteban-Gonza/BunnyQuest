@@ -9,38 +9,24 @@ public class PlayerController : MonoBehaviour{
     bool isWalking = false;
     public Vector2 lastMovement = Vector2.zero;
 
+    [Header("Constants")]
     const string horizontal = "Horizontal";
     const string vertical = "Vertical";
     const string lastHorizontal = "LastHorizontal";
     const string lastVertical = "LastVertical";
     const string walking = "IsMoving";
 
+    [Header("References")]
     Animator playerAnimator;
+    Rigidbody2D playerRigidBody;
 
     private void Start() {
         
         playerAnimator = GetComponent<Animator>();
+        playerRigidBody = GetComponent<Rigidbody2D>();
     }
 
     void Update() {
-        
-        isWalking = false;
-
-        if(Mathf.Abs(Input.GetAxisRaw(horizontal)) > 0.5f){
-
-            this.transform.Translate(
-                new Vector3(Input.GetAxisRaw(horizontal) * speed * Time.deltaTime, 0, 0));
-            isWalking = true;
-            lastMovement = new Vector2(Input.GetAxisRaw(horizontal), 0);
-        }
-
-        if(Mathf.Abs(Input.GetAxisRaw(vertical)) > 0.5f){
-
-            this.transform.Translate(
-                new Vector3(0, Input.GetAxisRaw(vertical) * speed * Time.deltaTime, 0));
-            isWalking = true;
-            lastMovement = new Vector2(0, Input.GetAxisRaw(vertical));
-        }
 
         //Set animation states
         playerAnimator.SetFloat(horizontal, Input.GetAxisRaw(horizontal));
@@ -50,5 +36,34 @@ public class PlayerController : MonoBehaviour{
         playerAnimator.SetFloat(lastVertical, lastMovement.y);
 
         playerAnimator.SetBool(walking, isWalking);
+    }
+
+    void FixedUpdate() {
+        
+        isWalking = false;
+
+        if(Mathf.Abs(Input.GetAxisRaw(horizontal)) > 0.5f){
+
+            /*this.transform.Translate(
+                new Vector3(Input.GetAxisRaw(horizontal) * speed * Time.deltaTime, 0, 0));*/
+            playerRigidBody.velocity = new Vector2(Input.GetAxisRaw(horizontal) * speed,
+                playerRigidBody.velocity.y);
+            isWalking = true;
+            lastMovement = new Vector2(Input.GetAxisRaw(horizontal), 0);
+        }
+
+        if(Mathf.Abs(Input.GetAxisRaw(vertical)) > 0.5f){
+
+            /*this.transform.Translate(
+                new Vector3(0, Input.GetAxisRaw(vertical) * speed * Time.deltaTime, 0));*/
+            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x,
+                Input.GetAxisRaw(vertical) * speed);
+            isWalking = true;
+            lastMovement = new Vector2(0, Input.GetAxisRaw(vertical));
+        }
+
+        if(!isWalking){
+            playerRigidBody.velocity = Vector2.zero;
+        }
     }
 }
