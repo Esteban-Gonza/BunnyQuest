@@ -5,9 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour{
 
     [SerializeField] float speed = 4f;
-
-    bool isWalking = false;
+    
+    public string nextPlaceName;
     public Vector2 lastMovement = Vector2.zero;
+    
+    bool isWalking = false;
 
     [Header("Constants")]
     const string horizontal = "Horizontal";
@@ -19,6 +21,18 @@ public class PlayerController : MonoBehaviour{
     [Header("References")]
     Animator playerAnimator;
     Rigidbody2D playerRigidBody;
+
+    public static bool playerCreated;
+
+    void Awake(){
+        
+        if (!playerCreated){
+            playerCreated = true;
+            DontDestroyOnLoad(this.transform.gameObject);
+        }else{
+            Destroy(gameObject);
+        }
+    }
 
     private void Start() {
         
