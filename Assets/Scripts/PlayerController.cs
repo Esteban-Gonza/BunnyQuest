@@ -7,7 +7,8 @@ public class PlayerController : MonoBehaviour{
     [SerializeField] float speed = 4f;
     
     public string nextPlaceName;
-    public Vector2 lastMovement = Vector2.zero;
+    
+    Vector2 lastMovement = Vector2.zero;
     
     bool isWalking = false;
 
